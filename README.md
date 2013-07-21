@@ -2,8 +2,8 @@
 
 ## Required
 
-node.js
-slimrb
+* node.js
+* slimrb
 
 ## Prepare
 
