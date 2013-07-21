@@ -4,7 +4,7 @@
   "description": "My Application's static resources manager.",
   "author": "naoyes",
   "scripts": {
-    "preinstall": "npm i -g grunt-cli"
+    "preinstall": "sudo /usr/local/bin/npm i -g grunt-cli"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
