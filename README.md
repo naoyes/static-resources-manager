@@ -3,6 +3,7 @@
 ## Required
 
 node.js
+slimrb
 
 ## Prepare
 
