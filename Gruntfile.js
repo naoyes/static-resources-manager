@@ -48,22 +48,22 @@ module.exports = function(grunt) {
   grunt.initConfig({
     cssmin: {
       compress: {
-        files: {'dest/css/min.css': grunt.file.expand('src/css/*.css')}
+        files: {'/home/vagrant/www/orange/app/public/assets/css/min.css': grunt.file.expand('/home/vagrant/www/orange/app/public/assets/css/*.css')}
       }
     },
     slim: {
       dist: {
-        files: globToMultiFiles('**', 'dest/html', {
-                  cwd: 'src/slim',
+        files: globToMultiFiles('**', '/home/vagrant/www/orange/app/fuel/app/views', {
+                  cwd: '/home/vagrant/www/orange/app/assets/slim',
                   processName: function(fileName) {
-                                  fileName = fileName.replace('.slim', '.html');
+                                  fileName = fileName.replace('.slim', '.php');
                                   return fileName;
                                }
                 })
       }
     },
     watch: {
-      files: ['src/css/*.css', 'src/slim/*.slim'],
+      files: ['/home/vagrant/www/orange/app/public/assets/css/*.css', '/home/vagrant/www/orange/app/assets/slim/*.slim'],
       tasks: ['cssmin', 'slim']
     }
   });
