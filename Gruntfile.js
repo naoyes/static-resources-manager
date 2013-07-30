@@ -52,6 +52,18 @@ module.exports = function(grunt) {
       }
     },
     slim: {
+      dev: {
+        files: globToMultiFiles('**', '/home/vagrant/www/orange/app/fuel/app/views', {
+                  cwd: '/home/vagrant/www/orange/app/assets/slim',
+                  processName: function(fileName) {
+                                  fileName = fileName.replace('.slim', '.php');
+                                  return fileName;
+                               }
+                }),
+        options: {
+          pretty: true
+        }
+      },
       dist: {
         files: globToMultiFiles('**', '/home/vagrant/www/orange/app/fuel/app/views', {
                   cwd: '/home/vagrant/www/orange/app/assets/slim',
@@ -64,7 +76,7 @@ module.exports = function(grunt) {
     },
     watch: {
       files: ['/home/vagrant/www/orange/app/public/assets/css/*.css', '/home/vagrant/www/orange/app/assets/slim/*.slim'],
-      tasks: ['cssmin', 'slim']
+    tasks: ['cssmin', 'slim:dev']
     }
   });
 
@@ -75,5 +87,5 @@ module.exports = function(grunt) {
     }
   }
 
-  grunt.registerTask('default', ['cssmin', 'slim', 'watch']);
+  grunt.registerTask('default', ['cssmin', 'slim:dev', 'watch']);
 };
