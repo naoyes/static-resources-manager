@@ -76,7 +76,7 @@ module.exports = function(grunt) {
     },
     watch: {
       files: ['/home/vagrant/www/orange/app/public/assets/css/*.css', '/home/vagrant/www/orange/app/assets/slim/*.slim'],
-    tasks: ['cssmin', 'slim:dev']
+      tasks: ['cssmin', 'slim:dev']
     }
   });
 
