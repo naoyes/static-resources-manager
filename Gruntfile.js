@@ -94,10 +94,7 @@ module.exports = function(grunt) {
                                   fileName = fileName.replace('.slim', '');
                                   return fileName;
                                }
-                }),
-        options: {
-          pretty: true
-        }
+                })
       },
       dist_statics: {
         files: globToMultiFiles('**', assetsPath + '/..', {
@@ -106,10 +103,7 @@ module.exports = function(grunt) {
                                   fileName = fileName.replace('.slim', '');
                                   return fileName;
                                }
-                }),
-        options: {
-          pretty: true
-        }
+                })
       }
     },
     watch: {
