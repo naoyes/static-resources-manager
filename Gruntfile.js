@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
   var globToMultiFiles = function (glob, dest, options) {
@@ -45,18 +47,27 @@ module.exports = function(grunt) {
     return result;
   }
 
+  // path settings
+  var appRoot = '/home/vagrant/www/orange/app';
+  var srcRoot = appRoot + '/assets'
+  var appViewPath = appRoot + '/fuel/app/views';
+  var assetsPath = appRoot + '/public/assets';
   grunt.initConfig({
     cssmin: {
       compress: {
-        files: {'/home/vagrant/www/orange/app/public/assets/css/min.css': grunt.file.expand('/home/vagrant/www/orange/app/public/assets/css/*.css')}
+        files: (function(){
+                 var obj = {};
+                 obj[assetsPath + '/css/min.css'] = grunt.file.expand(srcRoot + '/css/*.css');
+                 return obj;
+               })(),
       }
     },
     slim: {
-      dev: {
-        files: globToMultiFiles('**', '/home/vagrant/www/orange/app/fuel/app/views', {
-                  cwd: '/home/vagrant/www/orange/app/assets/slim',
+      dev_app_views: {
+        files: globToMultiFiles('**', appViewPath, {
+                  cwd: srcRoot + '/slim/app_views',
                   processName: function(fileName) {
-                                  fileName = fileName.replace('.slim', '.php');
+                                  fileName = fileName.replace('.slim', '');
                                   return fileName;
                                }
                 }),
@@ -64,19 +75,62 @@ module.exports = function(grunt) {
           pretty: true
         }
       },
-      dist: {
-        files: globToMultiFiles('**', '/home/vagrant/www/orange/app/fuel/app/views', {
-                  cwd: '/home/vagrant/www/orange/app/assets/slim',
+      dev_statics: {
+        files: globToMultiFiles('**', assetsPath + '/..', {
+                  cwd: srcRoot + '/slim/statics',
                   processName: function(fileName) {
-                                  fileName = fileName.replace('.slim', '.php');
+                                  fileName = fileName.replace('.slim', '');
                                   return fileName;
                                }
-                })
+                }),
+        options: {
+          pretty: true
+        }
+      },
+      dist_app_views: {
+        files: globToMultiFiles('**', appViewPath, {
+                  cwd: srcRoot + '/slim/app_views',
+                  processName: function(fileName) {
+                                  fileName = fileName.replace('.slim', '');
+                                  return fileName;
+                               }
+                }),
+        options: {
+          pretty: true
+        }
+      },
+      dist_statics: {
+        files: globToMultiFiles('**', assetsPath + '/..', {
+                  cwd: srcRoot + '/slim/statics',
+                  processName: function(fileName) {
+                                  fileName = fileName.replace('.slim', '');
+                                  return fileName;
+                               }
+                }),
+        options: {
+          pretty: true
+        }
       }
     },
     watch: {
-      files: ['/home/vagrant/www/orange/app/public/assets/css/*.css', '/home/vagrant/www/orange/app/assets/slim/*.slim'],
-      tasks: ['cssmin', 'slim:dev']
+      files: [srcRoot + '/css/*.css', srcRoot + '/slim/*/*.slim'],
+      tasks: ['cssmin', 'slim:dev_app_views', 'slim:dev_statics']
+    },
+    compass: {
+      dev: {
+        options: {
+          // 設定ファイル
+          config: "compass_config.rb",
+          // 環境
+          environment: "development"
+        }
+      },
+      prod: {
+        options: {
+          config: "compass_config.rb",
+          environment: "production"
+        }
+      }
     }
   });
 
@@ -87,5 +141,5 @@ module.exports = function(grunt) {
     }
   }
 
-  grunt.registerTask('default', ['cssmin', 'slim:dev', 'watch']);
+  grunt.registerTask('default', ['cssmin', 'slim:dev_app_views', 'slim:dev_statics', 'watch']);
 };
