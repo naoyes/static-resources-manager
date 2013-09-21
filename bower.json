@@ -1,0 +1,24 @@
+{
+  "name": "static-resources-manager",
+  "version": "0.0.1",
+  "main": "/tmp/fuga",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "requirejs": "latest",
+    "jquery": "latest",
+    "json2": "latest",
+    "backbone-amd": "latest",
+    "backbone.localStorage": "latest",
+    "underscore-amd": "latest",
+    "bootstrap": "latest"
+  },
+  "devDependencies": {
+    "DefinitelyTyped": "https://github.com/borisyankov/DefinitelyTyped.git"
+  }
+}

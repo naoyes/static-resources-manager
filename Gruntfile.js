@@ -1,131 +1,133 @@
-'use strict';
-
 module.exports = function(grunt) {
+  'use strict';
+
   var pkg = grunt.file.readJSON('package.json');
-  var globToMultiFiles = function (glob, dest, options) {
-    var path = require('path');
-
-    grunt.util = grunt.util || grunt.utils;
-
-    dest = grunt.template.process(dest);
-
-    options = grunt.util._.defaults(options || {}, {
-      cwd: '',
-      minimatch: {},
-      processName: false
-    });
-
-    if (options.cwd.length > 0) {
-      options.minimatch.cwd = options.cwd;
-    }
-
-    var result = {};
-
-    var destFile;
-    var srcFile;
-
-    var fileName;
-    var filePath;
-
-    grunt.file.expand(options.minimatch, glob).forEach(function(file) {
-
-      fileName = path.basename(file);
-      filePath = path.dirname(file);
-
-      srcFile = path.join(options.cwd, file);
-
-      if (options.processName && grunt.util.kindOf(options.processName) === 'function') {
-        fileName = options.processName(fileName) || fileName;
-      }
-
-      destFile = path.join(dest, filePath, fileName);
-      if (grunt.file.isFile(srcFile)) {
-        result[destFile] = srcFile;
-      }
-    });
-
-    return result;
-  }
-
-  // path settings
-  var appRoot = '/home/vagrant/www/orange/app';
-  var srcRoot = appRoot + '/assets'
-  var appViewPath = appRoot + '/fuel/app/views';
-  var assetsPath = appRoot + '/public/assets';
   grunt.initConfig({
-    cssmin: {
-      compress: {
-        files: (function(){
-                 var obj = {};
-                 obj[assetsPath + '/css/min.css'] = grunt.file.expand(srcRoot + '/css/*.css');
-                 return obj;
-               })(),
-      }
-    },
-    slim: {
-      dev_app_views: {
-        files: globToMultiFiles('**', appViewPath, {
-                  cwd: srcRoot + '/slim/app_views',
-                  processName: function(fileName) {
-                                  fileName = fileName.replace('.slim', '');
-                                  return fileName;
-                               }
-                }),
-        options: {
-          pretty: true
-        }
-      },
-      dev_statics: {
-        files: globToMultiFiles('**', assetsPath + '/..', {
-                  cwd: srcRoot + '/slim/statics',
-                  processName: function(fileName) {
-                                  fileName = fileName.replace('.slim', '');
-                                  return fileName;
-                               }
-                }),
-        options: {
-          pretty: true
-        }
-      },
-      dist_app_views: {
-        files: globToMultiFiles('**', appViewPath, {
-                  cwd: srcRoot + '/slim/app_views',
-                  processName: function(fileName) {
-                                  fileName = fileName.replace('.slim', '');
-                                  return fileName;
-                               }
-                })
-      },
-      dist_statics: {
-        files: globToMultiFiles('**', assetsPath + '/..', {
-                  cwd: srcRoot + '/slim/statics',
-                  processName: function(fileName) {
-                                  fileName = fileName.replace('.slim', '');
-                                  return fileName;
-                               }
-                })
-      }
-    },
     watch: {
-      files: [srcRoot + '/css/*.css', srcRoot + '/slim/*/*.slim'],
-      tasks: ['cssmin', 'slim:dev_app_views', 'slim:dev_statics']
+      cssmin: {
+        files: ['build/css/**/*.css'],
+        tasks: ['cssmin:minify'],
+      },
+      compass: {
+        files: ['src/sass/**/*.scss'],
+        tasks: ['compass:dev'],
+      },
+      slim_statics: {
+        files: ['src/slim/statics/**/*.slim'],
+        tasks: ['slim:dev_statics'],
+      },
+      slim_app_views: {
+        files: ['src/slim/app_views/**/*.slim'],
+        tasks: ['slim:dev_app_views'],
+      },
+      typescript: {
+        files: ['src/ts/**/*.ts'],
+        tasks: ['typescript:dev'],
+      },
     },
     compass: {
       dev: {
         options: {
-          // 設定ファイル
-          config: "compass_config.rb",
-          // 環境
-          environment: "development"
+          sassDir: 'src/sass',
+          cssDir: 'build/css',
         }
       },
       prod: {
         options: {
-          config: "compass_config.rb",
-          environment: "production"
+          sassDir: 'src/sass',
+          cssDir: 'build/css',
+          environment: "production",
         }
       }
-    }
+    },
+    cssmin: {
+      minify: {
+        expand: true,
+        cwd: 'build/css/',
+        src: ['*.css', '!*.min.css'],
+        dest: 'build/css/',
+        ext: '.min.css',
+      }
+    },
+    slim: {
+      dev_statics: {
+        files: [
+          {
+            expand: true,
+            cwd: 'src/slim/statics',
+            src: ['**/*.slim'],
+            dest: 'build/html/statics',
+            ext: '.html',
+          },
+        ],
+        options: {
+          pretty: true
+        },
+      },
+      dev_app_views: {
+        files: [
+          {
+            expand: true,
+            cwd: 'src/slim/app_views',
+            src: ['**/*.slim'],
+            dest: 'build/html/app_views',
+            ext: '.html',
+          },
+        ],
+        options: {
+          pretty: true
+        },
+      },
+      dist_statics: {
+        files: [
+          {
+            expand: true,
+            cwd: 'src/slim/statics',
+            src: ['**/*.slim'],
+            dest: 'build/statics',
+            ext: '.html',
+          },
+        ],
+      },
+      dist_app_views: {
+        files: [
+          {
+            expand: true,
+            cwd: 'src/slim/app_views',
+            src: ['**/*.slim'],
+            dest: 'build/app_views',
+            ext: '.html',
+          },
+        ],
+      },
+    },
+    typescript: {
+      dev: {
+        files: [
+          {
+            expand: true,
+            cwd: 'src/ts',
+            src: ['**/*.ts'],
+            dest: 'build/js',
+            ext: '.js',
+          },
+        ],
+      },
+      dist: {
+        option: {
+          sourcemap: false,
+        },
+        files: [
+          {
+            expand: true,
+            cwd: 'src/ts',
+            src: ['**/*.ts'],
+            dest: 'build/js',
+            ext: '.js',
+          },
+        ],
+      },
+    },
   });
 
   var taskName;
@@ -135,5 +137,6 @@ module.exports = function(grunt) {
     }
   }
 
-  grunt.registerTask('default', ['cssmin', 'slim:dev_app_views', 'slim:dev_statics', 'watch']);
+  grunt.log.writeln('hello'); // log sample
+  grunt.registerTask('default', ['compass:dev', 'cssmin', 'slim:dev_statics', 'slim:dev_app_views', 'typescript:dev', 'watch']);
 };

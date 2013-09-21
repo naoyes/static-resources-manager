@@ -1,2 +1,7 @@
 *.swp
 node_modules
+.sass-cache/
+bower_components
+build/css/*
+build/html/app_views/*
+build/html/statics/*
