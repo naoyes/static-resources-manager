@@ -5,3 +5,5 @@ bower_components
 build/css/*
 build/html/app_views/*
 build/html/statics/*
+build/js/*
+build/img/*
