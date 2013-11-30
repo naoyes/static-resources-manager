@@ -20,9 +20,9 @@ module.exports = function(grunt) {
         files: ['src/slim/app_views/**/*.slim'],
         tasks: ['slim:dev_app_views'],
       },
-      typescript: {
-        files: ['src/ts/**/*.ts'],
-        tasks: ['typescript:dev'],
+      requirejs: {
+        files: ['src/js/**/*.js'],
+        tasks: ['requirejs'],
       },
     },
     compass: {
@@ -101,6 +101,32 @@ module.exports = function(grunt) {
         ],
       },
     },
+    requirejs: {
+      options: {
+        baseUrl: 'src',
+        paths: {
+            'jquery': '../bower_components/jquery/jquery.min',
+            'underscore': '../bower_components/underscore-amd/underscore-min',
+            'backbone': '../bower_components/backbone-amd/backbone-min',
+        },
+        shim: {
+            'jquery': {
+                exports: '$',
+            },
+            'underscore': {
+                exports: '_',
+            },
+            'backbone': {
+                deps: ['jquery', 'underscore'],
+                exports: 'Backbone',
+            },
+        },
+        optimize: "none",
+      },
+      dummy: {
+        options: {name: 'js/app', out: 'app.min.js'},
+      },
+    },
   });
 
   var taskName;
@@ -111,5 +137,6 @@ module.exports = function(grunt) {
   }
 
   grunt.log.writeln('hello'); // log sample
-  grunt.registerTask('default', ['compass:dev', 'cssmin', 'slim:dev_statics', 'slim:dev_app_views', 'watch']);
+  //grunt.registerTask('default', ['compass:dev', 'cssmin', 'slim:dev_statics', 'slim:dev_app_views', 'requirejs', 'watch']);
+  grunt.registerTask('default', ['requirejs']);
 };

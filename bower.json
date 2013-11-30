@@ -16,7 +16,8 @@
     "backbone-amd": "latest",
     "backbone.localStorage": "latest",
     "underscore-amd": "latest",
-    "bootstrap": "latest"
+    "bootstrap": "latest",
+    "semantic-ui": "*"
   },
   "devDependencies": {
     "DefinitelyTyped": "https://github.com/borisyankov/DefinitelyTyped.git"
