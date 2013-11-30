@@ -29,13 +29,13 @@ module.exports = function(grunt) {
       dev: {
         options: {
           sassDir: 'src/sass',
-          cssDir: 'build/css',
+          cssDir: 'public/assets/css',
         }
       },
       prod: {
         options: {
           sassDir: 'src/sass',
-          cssDir: 'build/css',
+          cssDir: 'public/assets/css',
           environment: "production",
         }
       }
@@ -43,9 +43,9 @@ module.exports = function(grunt) {
     cssmin: {
       minify: {
         expand: true,
-        cwd: 'build/css/',
+        cwd: 'public/assets/css/',
         src: ['*.css', '!*.min.css'],
-        dest: 'build/css/',
+        dest: 'public/assets/css/',
         ext: '.min.css',
       }
     },
@@ -56,7 +56,7 @@ module.exports = function(grunt) {
             expand: true,
             cwd: 'src/slim/statics',
             src: ['**/*.slim'],
-            dest: 'build/html/statics',
+            dest: 'public',
             ext: '.html',
           },
         ],
@@ -70,7 +70,7 @@ module.exports = function(grunt) {
             expand: true,
             cwd: 'src/slim/app_views',
             src: ['**/*.slim'],
-            dest: 'build/html/app_views',
+            dest: 'views',
             ext: '.html',
           },
         ],
@@ -84,7 +84,7 @@ module.exports = function(grunt) {
             expand: true,
             cwd: 'src/slim/statics',
             src: ['**/*.slim'],
-            dest: 'build/statics',
+            dest: 'public',
             ext: '.html',
           },
         ],
@@ -95,35 +95,8 @@ module.exports = function(grunt) {
             expand: true,
             cwd: 'src/slim/app_views',
             src: ['**/*.slim'],
-            dest: 'build/app_views',
+            dest: 'views',
             ext: '.html',
-          },
-        ],
-      },
-    },
-    typescript: {
-      dev: {
-        files: [
-          {
-            expand: true,
-            cwd: 'src/ts',
-            src: ['**/*.ts'],
-            dest: 'build/js',
-            ext: '.js',
-          },
-        ],
-      },
-      dist: {
-        option: {
-          sourcemap: false,
-        },
-        files: [
-          {
-            expand: true,
-            cwd: 'src/ts',
-            src: ['**/*.ts'],
-            dest: 'build/js',
-            ext: '.js',
           },
         ],
       },
@@ -138,5 +111,5 @@ module.exports = function(grunt) {
   }
 
   grunt.log.writeln('hello'); // log sample
-  grunt.registerTask('default', ['compass:dev', 'cssmin', 'slim:dev_statics', 'slim:dev_app_views', 'typescript:dev', 'watch']);
+  grunt.registerTask('default', ['compass:dev', 'cssmin', 'slim:dev_statics', 'slim:dev_app_views', 'watch']);
 };
